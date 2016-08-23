@@ -2,8 +2,43 @@
 <html>
   <head>
     <title>Hello, World!</title>
+    <link href="a.css" rel="stylesheet">
   </head>
   <body>
+    <div class="game">
+      <p class="row">
+        <span class="e">&nbsp;</span>
+        <label class="b">
+          <input type="radio" name="from" />
+        </label>
+        <span class="r">o</span>
+      </p>
+      <p class="row">
+        <span class="offset">&nbsp;</span>
+        <label class="o">
+          <input type="radio" name="to" />
+        </label>
+        <span class="o">&nbsp;</span>
+        <span class="r">o</span>
+      </p>
+      <p class="row">
+        <label class="b">
+          <input type="radio" name="from" />
+        </label>
+        <span class="o">&nbsp;</span>
+        <label class="o">
+          <input type="radio" name="to" />
+        </label>
+        <label class="o">
+          <input type="radio" name="to" />
+        </label>
+      </p>
+      <p class="row">
+        <span class="offset"> </span>
+        <a class="b" href="?s=[0,4]"></a>
+        <span class="o"> </span>
+      </p>
+    </div>
     <script src="js/main.js"></script>
   </body>
 </html>

@@ -1,0 +1,15 @@
+p.row { margin:-1px 0; padding:0; }
+.e, .o, .r, .b, .offset {
+    display: inline-block;
+    width: 40px; height: 40px;
+}
+.e, .o, .r, .b {
+    border: 8px solid grey;
+    border-radius: 28px;
+}
+.e {border-color: transparent;}
+.b {background: blue;}
+.b:hover {background:light-blue;}
+.r {background: red;}
+.offset {width: 28px;}
+
