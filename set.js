@@ -1,4 +1,4 @@
-var set = function() {
+var set = function(_set) {
   var hash = JSON.stringify;
   var values = {};
 
@@ -23,16 +23,28 @@ var set = function() {
   var forEach = function (f) {
     for (var k in values) {
       f(values[k]);
-      // if (values.hasOwnProperty(k)) {
-      //   f(values[k]);
-      // }
     }
   }
 
-  for(var i = 0; i < arguments.length; ++ i) {
-    add(arguments[i]);
+  var any = function (f) {
+    for (var k in values) {
+      if(f(values[k])) {
+        return true;
+      }
+    }
   }
 
-  return { has:has, add:add, rm:rm, forEach:forEach };
+  if (arguments.length === 1 && _set.forEach) {
+    _set.forEach(function (v) {
+      add(v);
+    })
+  }
+  else {
+    for(var i = 0; i < arguments.length; ++ i) {
+      add(arguments[i]);
+    }
+  }
+
+  return { has:has, add:add, rm:rm, forEach:forEach, any:any };
 }
 module.exports = set;
