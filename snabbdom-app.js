@@ -29,11 +29,11 @@ var steps = {
 }
 
 function adjacents(state, coord) {
-  var arr = [];
+  var r = set();
   for (var i = 0; i < directions.length; i++) {
-    arr.push(steps[directions[i]](coord));
+    r.add(steps[directions[i]](coord));
   }
-  return arr;
+  return r;
 }
 
 function isVacantRing(state, coord) {
@@ -64,27 +64,31 @@ function ringCanBeMoved(state, coord) {
   if (!isVacantRing(state, coord)) {
     return false;
   }
-  var adjacentsArray = adjacents(state, coord);
-  var emptyAdjacentsIndex = [];
+  var emptyAdjacents = set();
   var count = 0;
-  for (var i = 0; i < adjacentsArray.length; i++) {
-    if (state.rings.has(adjacentsArray[i])) {
+  adjacents(state, coord).forEach(function (c) {
+    if (state.rings.has(c)) {
       count++;
     }
     else {
-      emptyAdjacentsIndex.push(i);
-      //optomize by checking (x+5)%6 here
+      emptyAdjacents.add(c);
     }
-  }
+  });
   if (count > 4) {
     return false;
   }
-  for (var i = 0; i < emptyAdjacentsIndex.length; i++) {
-    if (emptyAdjacentsIndex.indexOf((emptyAdjacentsIndex[i]+1)%6) !== -1) {
-      return true;
+
+  var foundAdjacentEmpties = false;
+  emptyAdjacents.forEach(function (c) {
+    if (adjacents(state, c).any(
+        function (a) {
+          return emptyAdjacents.has(a);
+        })
+      ) {
+      foundAdjacentEmpties = true;
     }
-  }
-  return false;
+  })
+  return foundAdjacentEmpties;
 }
 
 function ringSelected(state, coord) {
@@ -177,20 +181,22 @@ function candidateRings(state) {
 
 function potentialRings(state) {
   var r = [];
+  var ringToBeMoved = state.event[2];
   var _once = new set();
   var _twice = new set();
   if (state.event[0] === "ring-selected") {
-    state.rings.forEach(function (coord) {
-      var adjacentsArray = adjacents(state, coord);
-      for (var i = 0; i < adjacentsArray.length; i++) {
-        var currentCoord = adjacentsArray[i];
-        if (!state.rings.has(currentCoord)) {
+    var otherRings = set(state.rings);
+    otherRings.rm(ringToBeMoved);
+    otherRings.forEach(function (coord) {
+      adjacents(state, coord).forEach(function (currentCoord) {
+        if (!otherRings.has(currentCoord)) {
           if(_once.add(currentCoord)) {
             _twice.add(currentCoord);
           }
         }
-      }
+      });
     });
+    _twice.rm(ringToBeMoved);
     _twice.forEach(function (coord) {
       r.push(ring({coord:coord, highlight:true}));
     })
