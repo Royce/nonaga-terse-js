@@ -1,0 +1,26 @@
+{
+  "name": "nonaga",
+  "version": "1.0.0",
+  "description": "nonaga - spanish (maybe?) abstract strategy game",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.14.0",
+    "hyperscript": "^2.0.0",
+    "lodash": "^4.15.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.14.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.14.0",
+    "babel-preset-es2015-rollup": "^1.2.0",
+    "connect-livereload": "^0.5.4",
+    "gulp": "^3.9.1",
+    "rollup-plugin-babel": "^2.6.1",
+    "rollup-plugin-node-resolve": "^2.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
