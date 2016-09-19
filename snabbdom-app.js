@@ -104,6 +104,40 @@ function ringMovedLastTurn(state, coord) {
     && sameCoord(state.last_ring_move[2], coord)
 }
 
+function candidateRings(state) {
+  var r = set();
+  state.rings.forEach(function (coord) {
+    if (ringCanBeMoved(state, coord)
+        && !ringSelected(state, coord)
+        && !ringMovedLastTurn(state, coord)) {
+      r.add(coord);
+    }
+  });
+  return r;
+}
+
+function validRingDest(state, ringToBeMoved) {
+  var _once = set();
+  var _twice = set();
+  var otherRings = set(state.rings);
+  otherRings.rm(ringToBeMoved);
+  otherRings.forEach(function (coord) {
+    adjacents(state, coord).forEach(function (currentCoord) {
+      if (!otherRings.has(currentCoord)) {
+        if(_once.add(currentCoord)) {
+          _twice.add(currentCoord);
+        }
+      }
+    });
+  });
+  _twice.rm(ringToBeMoved);
+  if (state.last_ring_move) {
+    _twice.rm(state.last_ring_move[1])
+  }
+  return _twice;
+}
+
+
 var initial = function() {
   return {
     rings: set(
@@ -166,7 +200,7 @@ function ring(props) {
 }
 
 
-function rings(state) {
+function drawRings(state) {
   var r = [];
   state.rings.forEach(function (coord) {
     if(!ringSelected(state, coord)) {
@@ -176,46 +210,21 @@ function rings(state) {
   return r;
 }
 
-function candidateRings(state) {
+function drawCandidateRings(state) {
   var r = [];
   if (state.event[0] === "marble-moved"
     || state.event[0] === "ring-selected") {
-    state.rings.forEach(function (coord) {
-      if (ringCanBeMoved(state, coord)
-          && !ringSelected(state, coord)
-          && !ringMovedLastTurn(state, coord)) {
-        r.push(ring({
-          coord:coord,
-          highlight:true,
-          event:"ring-selected"}));
-      }
+    candidateRings(state).forEach(function (coord) {
+      r.push(ring({
+        coord:coord,
+        highlight:true,
+        event:"ring-selected"}));
     });
   }
   return r;
 }
 
-function validRingDest(state, ringToBeMoved) {
-  var _once = set();
-  var _twice = set();
-  var otherRings = set(state.rings);
-  otherRings.rm(ringToBeMoved);
-  otherRings.forEach(function (coord) {
-    adjacents(state, coord).forEach(function (currentCoord) {
-      if (!otherRings.has(currentCoord)) {
-        if(_once.add(currentCoord)) {
-          _twice.add(currentCoord);
-        }
-      }
-    });
-  });
-  _twice.rm(ringToBeMoved);
-  if (state.last_ring_move) {
-    _twice.rm(state.last_ring_move[1])
-  }
-  return _twice;
-}
-
-function potentialRings(state) {
+function drawPotentialRings(state) {
   var r = [];
   if (state.event[0] === "ring-selected") {
     validRingDest(state, state.event[2]).forEach(function (coord) {
@@ -229,7 +238,7 @@ function potentialRings(state) {
   return r;
 }
 
-function lastRingMove(state) {
+function drawLastRingMove(state) {
   if (state.last_ring_move) {
     return [
       ring({
@@ -267,15 +276,14 @@ function marble(props) {
   )
 }
 
-function marbles(state, color) {
-  var selectable;
+function drawMarbles(state, color) {
   var r = [];
+  var selectable =
+    (state.event[0] === "turn-began"
+        || state.event[0] === "marble-selected")
+      && state.event[1] === color
+  ;
   state[color].forEach(function (coord) {
-    selectable =
-      (state.event[0] === "turn-began"
-          || state.event[0] === "marble-selected")
-        && state.event[1] === color
-    ;
     r.push(marble({
       color:color,
       coord:coord,
@@ -285,7 +293,7 @@ function marbles(state, color) {
   return r;
 }
 
-function potentialMarbles(state) {
+function drawPotentialMarbles(state) {
   var r = [];
   if (state.event[0] === "marble-selected") {
     var color = state.event[1];
@@ -315,13 +323,13 @@ function flatten() {
 view = function view(state) {
   return h('div', [
     h('svg', {attrs: {width: 400, height: 400}}, flatten(
-      rings(state),
-      candidateRings(state),
-      potentialRings(state),
-      lastRingMove(state),
-      marbles(state, "red"),
-      marbles(state, "blue"),
-      potentialMarbles(state),
+      drawRings(state),
+      drawCandidateRings(state),
+      drawPotentialRings(state),
+      drawLastRingMove(state),
+      drawMarbles(state, "red"),
+      drawMarbles(state, "blue"),
+      drawPotentialMarbles(state),
     ))
   ]);
 }
