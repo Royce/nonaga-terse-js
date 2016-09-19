@@ -4,7 +4,6 @@ var patch = snabbdom.init([
   require('snabbdom/modules/eventlisteners')
 ]);
 var h = require('snabbdom/h');
-var flatten = require('lodash/flatten');
 var set = require('./set');
 
 
@@ -302,10 +301,20 @@ function potentialMarbles(state) {
   return r;
 }
 
+function flatten() {
+  var r = [];
+  for (var i = 0; i < arguments.length; i++) {
+    var arg = arguments[i];
+    for (var j = 0; j < arg.length; j++) {
+      r.push(arg[j]);
+    }
+  }
+  return r;
+}
 
 view = function view(state) {
   return h('div', [
-    h('svg', {attrs: {width: 400, height: 400}}, flatten([
+    h('svg', {attrs: {width: 400, height: 400}}, flatten(
       rings(state),
       candidateRings(state),
       potentialRings(state),
@@ -313,8 +322,7 @@ view = function view(state) {
       marbles(state, "red"),
       marbles(state, "blue"),
       potentialMarbles(state),
-    ])
-    )
+    ))
   ]);
 }
 
