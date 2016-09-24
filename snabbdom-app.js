@@ -14,8 +14,8 @@ import {
 } from './logic';
 
 
-var width = 50;
-var half = 25;
+var width = 44;
+var half = 22;
 // var translate = function translate(xy) {
 //   // isOdd(v) = (v & 1)  but it actually returns 1 'odd' or 0 'even'
 //   return [(160 + width*xy[0] + (v & 1)*half),
