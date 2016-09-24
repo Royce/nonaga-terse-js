@@ -132,7 +132,7 @@ function initial() {
     ),
     red: set([1,0], [4,2], [1,4]),
     blue: set([3,0], [0,2], [3,4]),
-    event: ["turn-began", "red"]
+    event: ["turn-began", Math.random() >= 0.5 ? "red" : "blue"]
   };
 };
 

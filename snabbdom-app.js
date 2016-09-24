@@ -194,6 +194,9 @@ function flatten() {
 
 view = function view(state) {
   return h('div', [
+    h('p', {attrs: {style: "color:"+state.event[1]}}, [
+      "Turn: " + state.event[1]
+    ]),
     h('svg', {attrs: {width: 400, height: 400}}, flatten(
       drawRings(state),
       drawCandidateRings(state),
