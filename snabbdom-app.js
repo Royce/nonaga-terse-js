@@ -4,7 +4,7 @@ var patch = snabbdom.init([
   require('./snabbdom/modules/eventlisteners')
 ]);
 var h = require('snabbdom/h');
-var set = require('./set');
+
 import {
   validMoves,
   ringSelected,
