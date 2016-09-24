@@ -1,7 +1,7 @@
-var snabbdom = require('snabbdom');
+var snabbdom = require('./snabbdom/snabbdom');
 var patch = snabbdom.init([
-  require('snabbdom/modules/attributes'),
-  require('snabbdom/modules/eventlisteners')
+  require('./snabbdom/modules/attributes'),
+  require('./snabbdom/modules/eventlisteners')
 ]);
 var h = require('snabbdom/h');
 var set = require('./set');
